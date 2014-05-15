@@ -21,13 +21,25 @@ isat = 17.5 #W/m^2
 A = hbar*omega*gamma/2/isat
 B = k*vrecoil
          
-"""now, make a grid"""
-zfinal = 0.0001 #m, so ~100um
-tfinal = 0.0002 #s, so up to 200us
-dt = tfinal/1000.00
-dz = zfinal/300.00
-zrange = np.arange(0,zfinal,dz)
-trange = np.arange(0,tfinal,dt)
-Inotrange = np.exp(np.arange(-2, 2, 0.5))
-num = zeros([zrange.size])
+"""define initial atom distribution, and convert to superatoms"""
+def n(x):
+    return 1.1e17
 
+zfinal = 0.0001 #m, so ~100um
+dz = zfinal/100000.00
+zrange = np.arange(0,zfinal,dz)
+
+superSize = 1e10 #number of atoms per unit area in one superatom
+integral = np.cumsum([n(z)*dz for z in zrange])/superSize
+superAtomNumber = int(integral[zrange.size-1]) 
+atomIndexes = np.arange(superAtomNumber)
+positions = np.interp(atomIndexes+1,integral,zrange)
+
+
+
+
+#tfinal = 0.0002 #s, so up to 200us
+#dt = tfinal/1000.00
+#Inotrange = np.exp(np.arange(-2, 2, 0.5))
+#num = zeros([zrange.size])
+#trange = np.arange(0,tfinal,dt)
