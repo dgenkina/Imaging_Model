@@ -20,8 +20,25 @@ vrecoil = 0.01296541083 #m/s
 isat = 17.5 #W/m^2
 A = hbar*omega*gamma/2/isat
 B = k*vrecoil
+
+"""Define superatom class"""
+class SuperAtom:
+    def __init__(self,position,velocity):
+        self.z = position
+        self.v = velocity
+        self.zlist = [position]
+        self.vlist = [velocity]
+    def updateVelocity(self, Vadded):
+        self.v += Vadded
+        self.vlist.append(self.v)
+    def updatePosition(self,time):
+        self.z += self.v*time
+        self.zlist.append(self.z)
+        
+
          
-"""define initial atom distribution, and convert to superatoms"""
+"""define initial atom distribution, and convert to superatoms.
+Assign initial position and velocity to each superatom"""
 def n(x):
     return 1.1e17
 
@@ -34,6 +51,7 @@ integral = np.cumsum([n(z)*dz for z in zrange])/superSize
 superAtomNumber = int(integral[zrange.size-1]) 
 atomIndexes = np.arange(superAtomNumber)
 positions = np.interp(atomIndexes+1,integral,zrange)
+atoms = [SuperAtom(zed/2,0.0) for zed in positions]
 
 
 
