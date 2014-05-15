@@ -13,12 +13,12 @@ hbar = 1.05457173*1e-34 #m^2kg/s
 c = 299792485 #m/s
 
 """for K atoms, on resonant light:"""
-gamma = 2*pi*6035000.0 #Hz
+Gamma = 2*pi*6035000.0 #Hz
 k = 2*pi*1298518.93857 #m^-1 
 omega = k*c
 vrecoil = 0.01296541083 #m/s
 isat = 17.5 #W/m^2
-A = hbar*omega*gamma/2/isat
+A = hbar*omega*Gamma/2/isat
 B = k*vrecoil
 
 """Define superatom class"""
@@ -48,16 +48,32 @@ zrange = np.arange(0,zfinal,dz)
 
 superSize = 1e10 #number of atoms per unit area in one superatom
 integral = np.cumsum([n(z)*dz for z in zrange])/superSize
+od = integral[zrange.size-1]*superSize*A
 superAtomNumber = int(integral[zrange.size-1]) 
 atomIndexes = np.arange(superAtomNumber)
 positions = np.interp(atomIndexes+1,integral,zrange)
 atoms = [SuperAtom(zed/2,0.0) for zed in positions]
 
+"define time grid and initialize intensity array"
+tfinal = 0.0002 #s, so up to 200us
+dt = tfinal/1000.00
+trange = np.arange(0,tfinal,dt)
+Inot = 1.3
+I = np.zeros([trange.size, superAtomNumber+1])
+I[:,0] = Inot
+
+for t in range(trange.size):
+    sortedAtoms = sorted(atoms, key=lambda SuperAtom: SuperAtom.z)
+    for atomIndex in atomIndexes:
+        Delta = 2*k*sortedAtoms[atomIndex].v/Gamma
+        rate = (I[t,atomIndex])/(1+(Delta**2)+I[t,atomIndex])
+        I[t,atomIndex+1]=I[t,atomIndex]-A*superSize*rate
+        sortedAtoms[atomIndex].updateVelocity(B*rate*dt*Gamma/2/k)
+        sortedAtoms[atomIndex].updatePosition(dt)
+    
+Ifinaltot = np.cumsum(I[:,superAtomNumber]*dt)/(trange+dt)
+od0 = -np.log(Ifinaltot/Inot)     
+od1 = -np.log(Ifinaltot/Inot) + (Inot-Ifinaltot)
 
 
 
-#tfinal = 0.0002 #s, so up to 200us
-#dt = tfinal/1000.00
-#Inotrange = np.exp(np.arange(-2, 2, 0.5))
-#num = zeros([zrange.size])
-#trange = np.arange(0,tfinal,dt)
