@@ -5,8 +5,9 @@ Created on Tue May 13 13:40:39 2014
 @author: dng5
 """
 
-from pylab import *
+#from pylab import *
 import numpy as np
+from numpy import pi
 
 """first define constants"""
 hbar = 1.05457173*1e-34 #m^2kg/s
@@ -35,12 +36,6 @@ class SuperAtom:
         self.z += self.v*time
         self.zlist.append(self.z)
         
-class ReturnValues:
-    def __init__(y0,y1,y2,y3):
-        self.od = y0
-        self.od1 = y1
-        self.Ifinal=y2
-        self.AtomVelocity=y3
         
 
 def Image(Inot, tfinal,steps):         
@@ -81,7 +76,7 @@ def Image(Inot, tfinal,steps):
     #od0 = -np.log(Ifinaltot/Inot)     
     od1 = -np.log(Ifinaltot/Inot) + (Inot-Ifinaltot)
     
-    return ReturnValues(od, od1, Ifinaltot, atoms[0].vlist[1])
+    return (od, od1, Ifinaltot, atoms[0].vlist[1])
 
 
 

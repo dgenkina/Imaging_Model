@@ -4,7 +4,7 @@ Created on Thu May 15 16:23:12 2014
 
 @author: dng5
 """
-from pylab import *
+
 import numpy as np
 import ImagingModel3 
 
@@ -12,12 +12,16 @@ import ImagingModel3
 
 time = 0.0002 #s, so up to 200us
 steps = 100
-Inotrange = exp(np.arange(-5,5,0.5))
+Inotrange = np.exp(np.arange(-5,5,0.5))
+od = []
+od1All = []
+IfinalAll = []
+VinitAll = []
 
 for i in range(Inotrange.size):
     inot = Inotrange[i]
-    outputObject[i] = Image(inot,time,steps)
-od[:] = outputObject[:].od
-od1All[:] = outputObject[:].od1[steps]
-IfinalAll[:] = outputObject[:].Ifinal[steps]
-VinitAll[:] = outputObject[:].AtomVelocity
+    outputTuple = Image(inot,time,steps)
+    od.append(outputTuple[0])
+    od1All.append(outputTuple[1])
+    IfinalAll.append(outputTuple[2])
+    VinitAll.append(outputTuple[3])
