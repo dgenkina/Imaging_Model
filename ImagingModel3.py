@@ -74,10 +74,10 @@ def Image(Inot, tfinal,steps):
             sortedAtoms[atomIndex].updatePosition(dt)
         
     Ifinaltot = np.cumsum(I[:,superAtomNumber]*dt)/(trange+dt)
-    #od0 = -np.log(Ifinaltot/Inot)     
+    od0 = -np.log(Ifinaltot/Inot)     
     od1 = -np.log(Ifinaltot/Inot) + (Inot-Ifinaltot)
     
-    return (od, od1, Ifinaltot, atoms[0].vlist[1])
+    return (od, od0, od1, Ifinaltot, atoms[0].vlist[1])
 
 
 
