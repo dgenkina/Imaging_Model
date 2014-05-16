@@ -22,9 +22,11 @@ A = hbar*omega*Gamma/2/isat
 B = k*vrecoil
 
 """Define superatom class"""
+def add(x,y): return x+y
+    
 class SuperAtom:
     def __init__(self,position,velocity):
-        self.z = position
+        self.z = position       
         self.v = velocity
         self.zlist = [position]
         self.vlist = [velocity]
@@ -45,35 +47,44 @@ def n(x):
 zfinal = 0.0001 #m, so ~100um
 dz = zfinal/100000.00
 zrange = np.arange(0,zfinal,dz)
+Inotrange = np.exp(np.arange(-5, 8, 0.5))
 
-superSize = 1e10 #number of atoms per unit area in one superatom
+superSize = 5e10 #number of atoms per unit area in one superatom
 integral = np.cumsum([n(z)*dz for z in zrange])/superSize
 od = integral[zrange.size-1]*superSize*A
 superAtomNumber = int(integral[zrange.size-1]) 
 atomIndexes = np.arange(superAtomNumber)
 positions = np.interp(atomIndexes+1,integral,zrange)
-atoms = [SuperAtom(zed/2,0.0) for zed in positions]
+atoms = [[SuperAtom(zed/2,0.0) for zed in positions] for x in range(Inotrange.size)]
+
+
 
 "define time grid and initialize intensity array"
-tfinal = 0.0002 #s, so up to 200us
-dt = tfinal/1000.00
+tfinal = 0.0001 #s, so up to 200us
+dt = tfinal/100.00
 trange = np.arange(0,tfinal,dt)
-Inot = 1.3
-I = np.zeros([trange.size, superAtomNumber+1])
-I[:,0] = Inot
+Inots = np.outer(Inotrange,np.ones(trange.size))
+Times = np.outer(np.ones(Inotrange.size),trange) 
+I = np.zeros([Inotrange.size, trange.size, superAtomNumber+1])
+I[:,:,0] = Inots
+Delta = np.zeros([Inotrange.size])
+rate = np.zeros([Inotrange.size])
+
 
 for t in range(trange.size):
-    sortedAtoms = sorted(atoms, key=lambda SuperAtom: SuperAtom.z)
-    for atomIndex in atomIndexes:
-        Delta = 2*k*sortedAtoms[atomIndex].v/Gamma
-        rate = (I[t,atomIndex])/(1+(Delta**2)+I[t,atomIndex])
-        I[t,atomIndex+1]=I[t,atomIndex]-A*superSize*rate
-        sortedAtoms[atomIndex].updateVelocity(B*rate*dt*Gamma/2/k)
-        sortedAtoms[atomIndex].updatePosition(dt)
-    
-Ifinaltot = np.cumsum(I[:,superAtomNumber]*dt)/(trange+dt)
-od0 = -np.log(Ifinaltot/Inot)     
-od1 = -np.log(Ifinaltot/Inot) + (Inot-Ifinaltot)
+    sortedAtoms = []
+    for i in range(Inotrange.size):
+        sortedAtoms.append(sorted(atoms[i], key=lambda SuperAtom: SuperAtom.z))
+        for atomIndex in atomIndexes:
+            Delta[i] = 2*k*np.array(sortedAtoms[i][atomIndex].v)/Gamma
+            rate[i] = (I[i,t,atomIndex])/(1+(Delta[i]**2)+I[i,t,atomIndex])
+            I[i,t,atomIndex+1]=I[i,t,atomIndex]-A*superSize*rate[i]
+            sortedAtoms[i][atomIndex].updateVelocity(B*rate[i]*dt*Gamma/2/k)
+            sortedAtoms[i][atomIndex].updatePosition(dt)
+        
+Ifinaltot = np.cumsum(I[:,:,superAtomNumber]*dt,axis=1)/(Times+dt)
+od0 = -np.log(Ifinaltot/Inots)     
+od1 = -np.log(Ifinaltot/Inots) + (Inots-Ifinaltot)
 
 
 
