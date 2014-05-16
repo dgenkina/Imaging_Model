@@ -45,8 +45,8 @@ def Image(Inot, tfinal,steps):
         return 1.1e17
     
     zfinal = 0.0001 #m, so ~100um
-    dz = zfinal/100000.00
-    zrange = np.arange(0,zfinal,dz)
+    zrange = np.linspace(0,zfinal,100000)
+    dz = zrange[1]-zrange[0]#zfinal/100000.00
     
     superSize = 1e10 #number of atoms per unit area in one superatom
     integral = np.cumsum([n(z)*dz for z in zrange])/superSize
@@ -57,8 +57,9 @@ def Image(Inot, tfinal,steps):
     atoms = [SuperAtom(zed/2,0.0) for zed in positions]
     
     "define time grid and initialize intensity array"
-    dt = tfinal/float(steps)
-    trange = np.arange(0,tfinal,dt)
+   
+    trange = np.linspace(0,tfinal,steps)
+    dt = trange[1]-trange[0]#tfinal/float(steps)
  #   Inot = 1.3
     I = np.zeros([trange.size, superAtomNumber+1])
     I[:,0] = Inot

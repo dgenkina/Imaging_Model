@@ -12,16 +12,15 @@ import ImagingModel3
 
 time = 0.0002 #s, so up to 200us
 steps = 100
-Inotrange = np.exp(np.arange(-5,5,0.5))
-od = []
-od1All = []
-IfinalAll = []
-VinitAll = []
+I0range = np.logspace(-5,8,20)
+od1All = np.empty([I0range.size,steps])
+IfinalAll = np.empty([I0range.size,steps])
+VinitAll = np.empty([I0range.size])
 
-for i in range(Inotrange.size):
-    inot = Inotrange[i]
+for i in range(I0range.size):
+    inot = I0range[i]
     outputTuple = Image(inot,time,steps)
-    od.append(outputTuple[0])
-    od1All.append(outputTuple[1])
-    IfinalAll.append(outputTuple[2])
-    VinitAll.append(outputTuple[3])
+    od=outputTuple[0]
+    od1All[i,:] = outputTuple[1]
+    IfinalAll[i,:] = outputTuple[2]
+    VinitAll[i] = outputTuple[3]
