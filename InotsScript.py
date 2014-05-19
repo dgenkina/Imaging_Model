@@ -12,7 +12,7 @@ import ImagingModel3
 
 time = 0.0002 #s, so up to 200us
 steps = 1000
-I0range = np.logspace(-5,8,20)
+I0range = np.logspace(-1,8,20)
 od0All = np.empty([I0range.size,steps])
 od1All = np.empty([I0range.size,steps])
 IfinalAll = np.empty([I0range.size,steps])
@@ -27,5 +27,5 @@ for i in range(I0range.size):
     IfinalAll[i,:] = outputTuple[3]
     VinitAll[i] = outputTuple[4]
     
-
-
+outfile = open("InotsScriptOutputs",'w')
+np.savez(outfile, od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VinitAll=VinitAll)
