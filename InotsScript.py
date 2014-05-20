@@ -16,7 +16,7 @@ I0range = np.logspace(-1,8,20)
 od0All = np.empty([I0range.size,steps])
 od1All = np.empty([I0range.size,steps])
 IfinalAll = np.empty([I0range.size,steps])
-VinitAll = np.empty([I0range.size])
+VatomAll = np.empty([I0range.size,steps+1])
 
 for i in range(I0range.size):
     inot = I0range[i]
@@ -25,8 +25,8 @@ for i in range(I0range.size):
     od0All[i,:] = outputTuple[1]
     od1All[i,:] = outputTuple[2]
     IfinalAll[i,:] = outputTuple[3]
-    VinitAll[i] = outputTuple[4]
+    VatomAll[i,:] = outputTuple[4]
     
 #outfile = open("InotsScriptOutputs",'r+')
-np.savez("InotsOutputs_StationaryAtoms", od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VinitAll=VinitAll)
+np.savez("InotsOutputs_OneSuperAtom", od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VatomAll=VatomAll)
 #outfile.close()
