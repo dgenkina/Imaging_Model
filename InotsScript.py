@@ -28,5 +28,5 @@ for i in range(I0range.size):
     VinitAll[i] = outputTuple[4]
     
 #outfile = open("InotsScriptOutputs",'r+')
-np.savez("InotsScriptOutputs", od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VinitAll=VinitAll)
+np.savez("InotsOutputs_StationaryAtoms", od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VinitAll=VinitAll)
 #outfile.close()
