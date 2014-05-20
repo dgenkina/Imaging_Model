@@ -15,12 +15,13 @@ sdtdev75 = {}
 error40 = {}
 sdtdev40 = {}
 Isatcounts = range(1,80,2)
+simul = np.load('InotsScriptOutputs.npz')
 for isat in Isatcounts:
-    error100[isat] = np.interp(probe[times[2]]/times[2]/isat,Inotrange, od0[:,500]) - Rod0Av[times[2]][0,:] 
+    error100[isat] = np.interp(probe[times[2]]/times[2]/isat,I0range, simul['od0All'][:,500]) - Rod0Av[times[2]][0,:] 
     sdtdev100[isat] = dot(error100[isat],error100[isat])
-    error75[isat] = np.interp(probe[times[1]]/times[1]/isat,Inotrange, od0[:,375]) - Rod0Av[times[1]][0,:] 
+    error75[isat] = np.interp(probe[times[1]]/times[1]/isat,I0range, simul['od0All'][:,375]) - Rod0Av[times[1]][0,:] 
     sdtdev75[isat] = dot(error75[isat],error75[isat])
-    error40[isat] = np.interp(probe[times[0]]/times[0]/isat,Inotrange, od0[:,200]) - Rod0Av[times[0]][0,:] 
+    error40[isat] = np.interp(probe[times[0]]/times[0]/isat,I0range, simul['od0All'][:,200]) - Rod0Av[times[0]][0,:] 
     sdtdev40[isat] = dot(error40[isat],error40[isat])
 
 graph = plt.figure()
