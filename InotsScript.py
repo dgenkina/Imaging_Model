@@ -27,5 +27,6 @@ for i in range(I0range.size):
     IfinalAll[i,:] = outputTuple[3]
     VinitAll[i] = outputTuple[4]
     
-outfile = open("InotsScriptOutputs",'w')
-np.savez(outfile, od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VinitAll=VinitAll)
+#outfile = open("InotsScriptOutputs",'r+')
+np.savez("InotsScriptOutputs", od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VinitAll=VinitAll)
+#outfile.close()
