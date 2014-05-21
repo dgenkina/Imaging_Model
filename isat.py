@@ -26,6 +26,10 @@ isatus = {}
 Rod0Av = {}
 Rod1Av={}
 probe={}
+Rod0Clean={}
+probeClean={}
+probeCl={}
+Rod0Cl={}
 
 delta = 16913.0
 
@@ -33,6 +37,8 @@ for time in times:
     Rod0Av[time] = zeros((len(isatRange),len(filerange[time])))
     Rod1Av[time] = zeros((len(isatRange),len(filerange[time])))
     probe[time] = zeros(len(filerange[time]))
+    Rod0Clean[time]=[]
+    probeClean[time]=[]
     a = (delta*time*10e-7)**2/3
     t = times.index(time)
     for isat in isatRange:
@@ -68,8 +74,14 @@ for time in times:
             Rod0Av[time][i,f] -= bgndod
             Rod1Av[time][i,f] -= bgndod
 
+            if probe[time][f]>300.0:
+                Rod0Clean[time].append(Rod0Av[time][0,f])
+                probeClean[time].append(probe[time][f])
+            
         Rod0stdev[time] = np.std(Rod0Av[time], axis=1)
         Rod1stdev[time] = np.std(Rod1Av[time], axis=1)
+        probeCl[time] = np.array(probeClean[time])
+        Rod0Cl[time] = np.array(Rod0Clean[time])
     isatus[time] = [float(x)/time for x in isatRange]
 #plot (isat, odstdev), show()
     #print odavg

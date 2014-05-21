@@ -12,7 +12,7 @@ import ImagingModel3
 
 time = 0.0002 #s, so up to 200us
 steps = 1000
-I0range = np.linspace(0.1,8,20)
+I0range = np.linspace(0.1,5,20)
 od0All = np.empty([I0range.size,steps])
 od1All = np.empty([I0range.size,steps])
 IfinalAll = np.empty([I0range.size,steps])

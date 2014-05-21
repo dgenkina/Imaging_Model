@@ -50,7 +50,7 @@ color[1]='g'
 color[2]='r'
 for t in range(len(timeIndexes)):
     index = timeIndexes[t]
-    odpanel.plot(probe[times[t]]/times[t]/IsatCounts,  Rod0Av[times[t]][0,:] , color[t]+'o')
+    odpanel.plot(probeCl[times[t]]/times[t]/IsatCounts,  Rod0Cl[times[t]] , color[t]+'o')
     odpanel.plot(I0range, od0All[:,index], color[t]+'-',linewidth=2)
     odpanel.set_xlabel("I/Isat", size=15)
     odpanel.set_ylabel("OD", size=15)
