@@ -18,15 +18,16 @@ od1All = np.empty([I0range.size,steps])
 IfinalAll = np.empty([I0range.size,steps])
 VatomAll = np.empty([I0range.size,steps+1])
 
-for i in range(I0range.size):
-    inot = I0range[i]
-    outputTuple = Image(inot,time,steps)
-    od=outputTuple[0]
-    od0All[i,:] = outputTuple[1]
-    od1All[i,:] = outputTuple[2]
-    IfinalAll[i,:] = outputTuple[3]
-    VatomAll[i,:] = outputTuple[4]
+def Simulate(ODinit,index):
+    for i in range(I0range.size):
+        inot = I0range[i]
+        outputTuple = Image(inot,time,steps,ODinit)
+        od=outputTuple[0]
+        od0All[i,:] = outputTuple[1]
+        od1All[i,:] = outputTuple[2]
+        IfinalAll[i,:] = outputTuple[3]
+        VatomAll[i,:] = outputTuple[4]
     
-#outfile = open("InotsScriptOutputs",'r+')
-np.savez("InotsComprableOD_1_45", od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VatomAll=VatomAll, I0range = I0range)
-#outfile.close()
+    #outfile = open("InotsScriptOutputs",'r+')
+    np.savez("SimulatedOD"+str(index), od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VatomAll=VatomAll, I0range = I0range)
+    #outfile.close()

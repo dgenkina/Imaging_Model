@@ -38,19 +38,19 @@ class SuperAtom:
         
         
 
-def Image(Inot, tfinal,steps):         
+def Image(Inot, tfinal,steps,ODinit):         
     """define initial atom distribution, and convert to superatoms.
     Assign initial position and velocity to each superatom"""
-    def n(x):
-        return 5.2e16
-    
     zfinal = 0.0001 #m, so ~100um
+    def n(x):
+        return ODinit/zfinal/A
+    
     zrange = np.linspace(0,zfinal,100000)
     dz = zrange[1]-zrange[0]#zfinal/100000.00
     
     superSize = 1e10 #number of atoms per unit area in one superatom
     integral = np.cumsum([n(z)*dz for z in zrange])/superSize
-    od = integral[zrange.size-1]*superSize*A
+    od = ODinit #integral[zrange.size-1]*superSize*A
     superAtomNumber = int(integral[zrange.size-1]) 
     atomIndexes = np.arange(superAtomNumber)
     positions = np.interp(atomIndexes+1,integral,zrange)
