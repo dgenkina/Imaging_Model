@@ -28,5 +28,5 @@ for i in range(I0range.size):
     VatomAll[i,:] = outputTuple[4]
     
 #outfile = open("InotsScriptOutputs",'r+')
-np.savez("InotsComprableOD", od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VatomAll=VatomAll, I0range = I0range)
+np.savez("InotsComprableOD_1_45", od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VatomAll=VatomAll, I0range = I0range)
 #outfile.close()

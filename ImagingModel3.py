@@ -42,7 +42,7 @@ def Image(Inot, tfinal,steps):
     """define initial atom distribution, and convert to superatoms.
     Assign initial position and velocity to each superatom"""
     def n(x):
-        return 6.0e16
+        return 5.2e16
     
     zfinal = 0.0001 #m, so ~100um
     zrange = np.linspace(0,zfinal,100000)
