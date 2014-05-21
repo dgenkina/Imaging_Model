@@ -42,13 +42,13 @@ def Image(Inot, tfinal,steps):
     """define initial atom distribution, and convert to superatoms.
     Assign initial position and velocity to each superatom"""
     def n(x):
-        return 1.1e17
+        return 6.0e16
     
     zfinal = 0.0001 #m, so ~100um
     zrange = np.linspace(0,zfinal,100000)
     dz = zrange[1]-zrange[0]#zfinal/100000.00
     
-    superSize = 1e13 #number of atoms per unit area in one superatom
+    superSize = 1e10 #number of atoms per unit area in one superatom
     integral = np.cumsum([n(z)*dz for z in zrange])/superSize
     od = integral[zrange.size-1]*superSize*A
     superAtomNumber = int(integral[zrange.size-1]) 
