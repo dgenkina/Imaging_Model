@@ -12,7 +12,7 @@ import ImagingModel3
 
 time = 0.0002 #s, so up to 200us
 steps = 1000
-I0range = np.linspace(0.1,5,20)
+I0range = np.linspace(0.1,5,40)
 od0All = np.empty([I0range.size,steps])
 od1All = np.empty([I0range.size,steps])
 IfinalAll = np.empty([I0range.size,steps])
@@ -29,5 +29,5 @@ def Simulate(ODinit,index):
         VatomAll[i,:] = outputTuple[4]
     
     #outfile = open("InotsScriptOutputs",'r+')
-    np.savez("SimulatedOD"+str(index), od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VatomAll=VatomAll, I0range = I0range)
+    np.savez("SimulatedOD"+str(int(ODinit*1000)), od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VatomAll=VatomAll, I0range = I0range)
     #outfile.close()

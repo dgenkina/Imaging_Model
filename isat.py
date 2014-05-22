@@ -6,7 +6,7 @@ This temporary script file is located here:
 C:\Users\dng5\.spyder2\.temp.py
 """
 from pylab import *
-from numpy import *
+import numpy as np
 times = (40.00, 75.00, 100.00)
 filerange = {}
 filerange[times[0]] = range(281,343)

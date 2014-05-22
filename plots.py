@@ -21,8 +21,6 @@ velocities.legend((velocities.lines[0],velocities.lines[1],velocities.lines[2]),
 initialVelocities.show()"""
 
 
-timeIndexes = (200, 375, 500)
-odfigure = plt.figure()
 """odpanel = {}
 line1 = {}
 line2 = {}
@@ -42,18 +40,3 @@ for t in range(len(timeIndexes)):
 odfigure.show()"""
 
 
-odpanel = odfigure.add_subplot(1,1,1)
-simul = np.load("SimulatedOD"+str(ODindex)+".npz")
-color={}
-color[0]='b'
-color[1]='g'
-color[2]='r'
-for t in range(len(timeIndexes)):
-    index = timeIndexes[t]
-    odpanel.plot(probeCl[times[t]]/times[t]/IsatCounts,  Rod0Cl[times[t]] , color[t]+'o')
-    odpanel.plot(I0range, od0All[:,index], color[t]+'-',linewidth=2)
-    odpanel.set_xlabel("I/Isat", size=15)
-    odpanel.set_ylabel("OD", size=15)
-odpanel.legend((odpanel.lines[0],odpanel.lines[2],odpanel.lines[4]),('t=40us','t=75us','t=100us'))
-odpanel.set_xlim(0,3)
-odfigure.show()
