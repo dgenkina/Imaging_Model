@@ -16,6 +16,8 @@ filerange[times[2]] = range(220,280)
 
 ymask = range(226,260)
 xmask = range(308,335)
+yprobe = range(287,316)
+xprobe = range(300,330)
 ybgnd = range(204,223)
 xbgnd = range(187,193)
 isatRange = range(100,200,100)
@@ -30,6 +32,8 @@ Rod0Clean={}
 probeClean={}
 probeCl={}
 Rod0Cl={}
+probeAv={}
+probeVar={}
 
 delta = 16913.0
 
@@ -37,6 +41,8 @@ for time in times:
     Rod0Av[time] = zeros((len(isatRange),len(filerange[time])))
     Rod1Av[time] = zeros((len(isatRange),len(filerange[time])))
     probe[time] = zeros(len(filerange[time]))
+    probeVar[time] = zeros(len(filerange[time]))
+    probeAv[time] = zeros(len(filerange[time]))
     Rod0Clean[time]=[]
     probeClean[time]=[]
     a = (delta*time*10e-7)**2/3
@@ -73,6 +79,15 @@ for time in times:
                         Rod1Av[time][i,f] += Rod1[x,y]/len(ymask)/len(xmask) 
             Rod0Av[time][i,f] -= bgndod
             Rod1Av[time][i,f] -= bgndod
+            
+            """Get variance of probe counts to caibrate photoelectons/photon"""
+            for x in xprobe:
+                for y in yprobe:
+                    probeAv[time][f] += inot[x,y]/len(xprobe)/len(yprobe)
+        
+            for x in xprobe:
+                for y in yprobe:
+                    probeVar[time][f] += ((probeAv[time][f]-inot[x,y])**2)/len(xprobe)/len(yprobe)
 
             if probe[time][f]>300.0:
                 Rod0Clean[time].append(Rod0Av[time][0,f])
