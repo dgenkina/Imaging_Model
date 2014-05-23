@@ -17,14 +17,14 @@ sdtdev40 = {}
 sdtdevTot={}
 Isatcounts = np.arange(1,80,0.5)
 
-ODrange = np.linspace(1.55,1.7,40)
+ODrange = np.linspace(0.01,2.5,500)
 IsatMin = np.empty([ODrange.size])
 SdtdevT = np.empty([ODrange.size])
 
 for i in range(ODrange.size):
     ODinit = ODrange[i]
-    #Simulate(ODinit,i)
-    simul = np.load("SimulatedOD"+str(int(ODinit*1000))+".npz")
+    Simulate(ODinit,i)
+    simul = np.load("Data/SimulatedOD"+str(int(ODinit*1000))+".npz")
     for isat in Isatcounts:
         error100[isat] = np.interp(probeCl[times[2]]/times[2]/isat,simul['I0range'], simul['od0All'][:,500]) - Rod0Clean[times[2]]
         sdtdev100[isat] = dot(error100[isat],error100[isat])
@@ -42,7 +42,7 @@ ODindex = int(np.where(SdtdevT==SdtdevMin)[0])
 IsatCounts = IsatMin[ODindex]
 ODbest = ODrange[ODindex]
 
-simul = np.load("SimulatedOD"+str(int(ODbest*1000))+".npz")
+simul = np.load("Data/SimulatedOD"+str(int(ODbest*1000))+".npz")
 for isat in Isatcounts:
     error100[isat] = np.interp(probeCl[times[2]]/times[2]/isat,simul['I0range'], simul['od0All'][:,500]) - Rod0Cl[times[2]]
     sdtdev100[isat] = dot(error100[isat],error100[isat])

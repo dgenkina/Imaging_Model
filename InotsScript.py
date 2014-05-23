@@ -29,5 +29,5 @@ def Simulate(ODinit,index):
         VatomAll[i,:] = outputTuple[4]
     
     #outfile = open("InotsScriptOutputs",'r+')
-    np.savez("SimulatedOD"+str(int(ODinit*1000)), od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VatomAll=VatomAll, I0range = I0range)
+    np.savez("Data/SimulatedOD"+str(int(ODinit*1000)), od=od, od0All=od0All, od1All=od1All, IfinalAll=IfinalAll, VatomAll=VatomAll, I0range = I0range)
     #outfile.close()

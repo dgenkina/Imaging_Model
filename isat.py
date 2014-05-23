@@ -7,6 +7,9 @@ C:\Users\dng5\.spyder2\.temp.py
 """
 from pylab import *
 import numpy as np
+import scipy
+import scipy.ndimage, scipy.optimize, scipy.special, scipy.stats
+
 times = (40.00, 75.00, 100.00)
 filerange = {}
 filerange[times[0]] = range(281,343)
@@ -57,6 +60,8 @@ for time in times:
             Raw3=raw3[filenum]
             ifin = Raw1-Raw3
             inot = Raw2-Raw3 
+            probeSmooth=scipy.ndimage.gaussian_filter(inot, sigma=4);
+            probeNoise=probeSmooth-inot
             Rod0 = -np.log((ifin)/(inot)) #+ (inot-ifin)/isat
             Rod1 = -np.log((ifin)/(inot)) + (inot-ifin)/isat# - a*(isat/(ifin+isat)-isat/(inot+isat) + np.log((ifin+isat)/(inot+isat)))        
             bgndod = 0.0            
@@ -81,13 +86,18 @@ for time in times:
             Rod1Av[time][i,f] -= bgndod
             
             """Get variance of probe counts to caibrate photoelectons/photon"""
+            num = 0            
             for x in xprobe:
                 for y in yprobe:
-                    probeAv[time][f] += inot[x,y]/len(xprobe)/len(yprobe)
+                    if inot[x,y]<4095: #throw out points where the camera saturates
+                        num+=1
+                        probeAv[time][f] += inot[x,y]
+            probeAv[time][f] = probeAv[time][f]/num
         
             for x in xprobe:
                 for y in yprobe:
-                    probeVar[time][f] += ((probeAv[time][f]-inot[x,y])**2)/len(xprobe)/len(yprobe)
+                    if inot[x,y]<4095:
+                        probeVar[time][f] += ((probeNoise[x,y])**2)/num
 
             if probe[time][f]>300.0:
                 Rod0Clean[time].append(Rod0Av[time][0,f])
