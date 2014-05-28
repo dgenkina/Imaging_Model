@@ -23,7 +23,7 @@ SdtdevT = np.empty([ODrange.size])
 
 for i in range(ODrange.size):
     ODinit = ODrange[i]
-    Simulate(ODinit,i)
+    #Simulate(ODinit,i)
     simul = np.load("Data/SimulatedOD"+str(int(ODinit*1000))+".npz")
     for isat in Isatcounts:
         error100[isat] = np.interp(probeCl[times[2]]/times[2]/isat,simul['I0range'], simul['od0All'][:,500]) - Rod0Clean[times[2]]
