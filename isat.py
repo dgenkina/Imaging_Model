@@ -34,16 +34,13 @@ xbgnd = range(187,193)
 BgndMask = np.ones_like(raw1[151])
 BgndMask[100:490,65:390]=0
 BgndMask[140:460,100:370]=1
-isatRange = range(100,200,100)
 
 """Define all the dictionaries - the keys of these dictionaries are the three
 imaging times, 40.00, 75.00, and 100.00 and they point to arrays of values 
 for each file at that imaging time"""
 Rod0stdev = {}
-Rod1stdev = {}
 isatus = {}
 Rod0Av = {}
-Rod1Av={}
 probe={}
 Rod0Clean={}
 probeClean={}
@@ -51,8 +48,7 @@ probeCl={}
 Rod0Cl={}
 probeAv={}
 probeVar={}
-Rod0AvNew={}
-probeNew={}
+
 
 delta = 16913.0
 
@@ -67,81 +63,72 @@ zeroNansInfsVector = np.vectorize(zeroNansInfs, otypes=[np.float])
 
 """Loop over the three different imaging times"""
 for time in times: 
-    Rod0Av[time] = zeros((len(isatRange),len(filerange[time])))
-    Rod1Av[time] = zeros((len(isatRange),len(filerange[time])))
+    Rod0Av[time] = zeros(len(filerange[time]))
     probe[time] = zeros(len(filerange[time]))
-    Rod0AvNew[time] = zeros((len(isatRange),len(filerange[time])))
-    probeNew[time] = zeros(len(filerange[time]))
     probeVar[time] = zeros(len(filerange[time]))
     probeAv[time] = zeros(len(filerange[time]))
     Rod0Clean[time]=[]
     probeClean[time]=[]
     a = (delta*time*10e-7)**2/3
     t = times.index(time)
-    for isat in isatRange:
-        i= isatRange.index(isat)
-        """loop over all the files taken at that imaging time"""
-        for filenum in filerange[time]:
-            f = filerange[time].index(filenum)
-            #print filepath2
-            Raw1=raw1[filenum]
-            Raw2=raw2[filenum]
-            Raw3=raw3[filenum]
-            ifin = Raw1-Raw3
-            inot = Raw2-Raw3 
-            
-            """Calculate the OD and high intensity corrected OD"""
-            Rod0Raw = -np.log((ifin)/(inot)) #+ (inot-ifin)/isat
-            Rod1 = -np.log((ifin)/(inot)) + (inot-ifin)/isat# - a*(isat/(ifin+isat)-isat/(inot+isat) + np.log((ifin+isat)/(inot+isat)))        
-            Rod0 = zeroNansInfsVector(Rod0Raw)
-             
-            """Check the OD in the square of interest for Nans and infinitys,
-            then average the OD over the square""" 
-            Rod0masked = np.ma.masked_array(Rod0,ROImask)
-            probeMasked = np.ma.masked_array(inot,ROImask)
-            Rod0Av[time][i,f]=np.ma.average(Rod0masked)
-            probe[time][f]=np.ma.average(probeMasked)
-                        
-            bgndMasked = np.ma.masked_array(Rod0,BgndMask)
-            bgndod2 = np.ma.average(bgndMasked)
-            bgndod = 0
-            """Use the defined background square to find the average background OD"""
-            for x in xbgnd:
-                for y in ybgnd:
-                    bgndod += Rod0[x,y]/len(ybgnd)/len(xbgnd)
-            #print Rod0Av[time][i,f]-Rod0AvNew[time][i,f], filenum 
-                        
-            """Subtract the average background from the average OD"""            
-            Rod0Av[time][i,f] -= bgndod
-            Rod1Av[time][i,f] -= bgndod
-            
-            """Get variance of probe counts to caibrate photoelectons/photon"""
-            probeSmooth=scipy.ndimage.gaussian_filter(inot, sigma=4);
-            probeNoise=probeSmooth-inot
-            num = 0            
-            for x in xprobe:
-                for y in yprobe:
-                    if inot[x,y]<4095: #throw out points where the camera saturates
-                        num+=1
-                        probeAv[time][f] += inot[x,y]
-            probeAv[time][f] = probeAv[time][f]/num
-        
-            for x in xprobe:
-                for y in yprobe:
-                    if inot[x,y]<4095:
-                        probeVar[time][f] += ((probeNoise[x,y])**2)/num
 
-            """Take out low probe intensity points because they are confusing"""
-            if probe[time][f]>300.0:
-                Rod0Clean[time].append(Rod0Av[time][0,f])
-                probeClean[time].append(probe[time][f])
-            
-        Rod0stdev[time] = np.std(Rod0Av[time], axis=1)
-        Rod1stdev[time] = np.std(Rod1Av[time], axis=1)
+    """loop over all the files taken at that imaging time"""
+    for filenum in filerange[time]:
+        f = filerange[time].index(filenum)
+        Raw1=raw1[filenum]
+        Raw2=raw2[filenum]
+        Raw3=raw3[filenum]
+        ifin = Raw1-Raw3
+        inot = Raw2-Raw3 
         
-        """Convert the average probe and OD to numpy arrays for future convenience"""
-        probeCl[time] = np.array(probeClean[time])
-        Rod0Cl[time] = np.array(Rod0Clean[time])
+        """Calculate the OD and high intensity corrected OD"""
+        Rod0Raw = -np.log((ifin)/(inot)) #+ (inot-ifin)/isat
+        Rod0 = zeroNansInfsVector(Rod0Raw)
+         
+        """Check the OD in the square of interest for Nans and infinitys,
+        then average the OD over the square""" 
+        Rod0masked = np.ma.masked_array(Rod0,ROImask)
+        probeMasked = np.ma.masked_array(inot,ROImask)
+        Rod0Av[time][f]=np.ma.average(Rod0masked)
+        probe[time][f]=np.ma.average(probeMasked)
+                    
+        bgndMasked = np.ma.masked_array(Rod0,BgndMask)
+        bgndod2 = np.ma.average(bgndMasked)
+        bgndod = 0
+        """Use the defined background square to find the average background OD"""
+        for x in xbgnd:
+            for y in ybgnd:
+                bgndod += Rod0[x,y]/len(ybgnd)/len(xbgnd)
+                    
+        """Subtract the average background from the average OD"""            
+        Rod0Av[time][f] -= bgndod
+
+        """Get variance of probe counts to caibrate photoelectons/photon"""
+        probeSmooth=scipy.ndimage.gaussian_filter(inot, sigma=4);
+        probeNoise=probeSmooth-inot
+        num = 0            
+        for x in xprobe:
+            for y in yprobe:
+                if inot[x,y]<4095: #throw out points where the camera saturates
+                    num+=1
+                    probeAv[time][f] += inot[x,y]
+        probeAv[time][f] = probeAv[time][f]/num
+    
+        for x in xprobe:
+            for y in yprobe:
+                if inot[x,y]<4095:
+                    probeVar[time][f] += ((probeNoise[x,y])**2)/num
+
+        """Take out low probe intensity points because they are confusing"""
+        if probe[time][f]>300.0:
+            Rod0Clean[time].append(Rod0Av[time][f])
+            probeClean[time].append(probe[time][f])
+        
+    Rod0stdev[time] = np.std(Rod0Av[time])
+    
+    """Convert the average probe and OD to numpy arrays for future convenience"""
+    probeCl[time] = np.array(probeClean[time])
+    Rod0Cl[time] = np.array(Rod0Clean[time])
    # isatus[time] = [float(x)/time for x in isatRange]
 #plot (isat, odstdev), show()
     #print odavg
