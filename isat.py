@@ -101,7 +101,7 @@ for time in times:
                 bgndod += Rod0[x,y]/len(ybgnd)/len(xbgnd)
                     
         """Subtract the average background from the average OD"""            
-        Rod0Av[time][f] -= bgndod
+        Rod0Av[time][f] -= bgndod2
 
         """Get variance of probe counts to caibrate photoelectons/photon"""
         probeSmooth=scipy.ndimage.gaussian_filter(inot, sigma=4);
