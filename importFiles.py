@@ -8,19 +8,19 @@ Created on Fri Apr 25 09:25:35 2014
 from pylab import *
 import numpy as np
 
-filerange = range(200,455)
+filerange = range(100,256)
 #filerange += range(281,343)
 
 raw1={}
 raw2={}
 raw3={}
 for filenum in filerange:
-    filepath =  "C:/Data/2013/September/05/Flea3_05Sep2013_0"
+    filepath =  "C:/Data/2013/September/06/Flea3_06Sep2013_0"
     filepath += str(filenum)
     filepath1 = filepath + "_Raw1"
     filepath2 = filepath + "_Raw2"
     filepath3 = filepath + "_Raw3"  
-    savedfilepath = "RawData/Sept05_"+str(filenum)
+    savedfilepath = "RawData/Sept06_"+str(filenum)
     Raw1=np.genfromtxt(filepath1, unpack=True, skiprows = 1)
     Raw2=np.genfromtxt(filepath2, unpack=True, skiprows = 1)
     Raw3=np.genfromtxt(filepath3, unpack=True, skiprows = 1)
