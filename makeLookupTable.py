@@ -5,6 +5,9 @@ Created on Thu May 29 10:42:56 2014
 @author: dng5
 """
 
+""" Create a table of simulated values of OD for an imaging time of 40 us
+and make a function that interpolates the table to get a value of simulated
+OD for any input initial od and probe intensity"""
 import numpy as np
 from scipy import interpolate
 
