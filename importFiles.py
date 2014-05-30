@@ -8,14 +8,14 @@ Created on Fri Apr 25 09:25:35 2014
 from pylab import *
 import numpy as np
 
-filerange = range(100,256)
+filerange = range(1,10)
 #filerange += range(281,343)
 
 raw1={}
 raw2={}
 raw3={}
 for filenum in filerange:
-    filepath =  "C:/Data/2013/September/06/Flea3_06Sep2013_0"
+    filepath =  "C:/Data/2013/September/06/Flea3_06Sep2013_000"
     filepath += str(filenum)
     filepath1 = filepath + "_Raw1"
     filepath2 = filepath + "_Raw2"
